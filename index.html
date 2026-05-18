@@ -2,11 +2,15 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#fff8f0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes" />
+<meta name="theme-color" content="#e8834a" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<title>Roots</title>
+<meta name="apple-mobile-web-app-title" content="Roots" />
+<meta name="mobile-web-app-capable" content="yes" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<title>Roots – Echte Gespraeche</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -31,123 +35,226 @@
   --radius: 20px;
   --shadow: 0 4px 24px rgba(80,50,20,0.10);
   --shadow-lg: 0 8px 40px rgba(80,50,20,0.15);
+  --nav-h: 58px;
+  --bnav-h: 64px;
 }
-html, body { height: 100%; background: var(--cream); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; }
+
+/* BASE – scrollable, scalable */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
 #app { min-height: 100vh; }
-.page { display: none; min-height: 100vh; flex-direction: column; animation: fadeUp 0.35s ease; }
+
+/* PAGES */
+.page { display: none; flex-direction: column; min-height: 100vh; animation: fadeUp 0.32s ease; }
 .page.active { display: flex; }
-@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
-nav { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:rgba(255,248,240,0.93); backdrop-filter:blur(10px); border-bottom:1px solid rgba(244,169,106,0.15); position:sticky; top:0; z-index:100; }
-.logo { font-family:'Lora',serif; font-size:1.25rem; color:var(--amber); display:flex; align-items:center; gap:7px; }
-.nav-right { font-size:0.68rem; color:var(--text-muted); text-align:right; line-height:1.5; }
-.bottom-nav { position:fixed; bottom:0; left:0; right:0; z-index:200; background:rgba(255,255,255,0.96); backdrop-filter:blur(12px); border-top:1px solid rgba(244,169,106,0.18); display:flex; padding-bottom:env(safe-area-inset-bottom); }
-.bn { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:10px 4px 8px; cursor:pointer; border:none; background:none; font-family:'DM Sans',sans-serif; font-size:0.65rem; color:var(--text-muted); transition:color 0.15s; }
-.bn .bni { font-size:1.35rem; }
-.bn.active { color:var(--amber); }
-.scroll-wrap { flex:1; overflow-y:auto; padding:24px 20px 100px; }
-.btn { border:none; border-radius:99px; cursor:pointer; font-family:'DM Sans',sans-serif; font-weight:500; transition:all 0.15s; display:inline-flex; align-items:center; gap:6px; }
-.btn-primary { background:var(--amber); color:white; padding:14px 32px; font-size:0.95rem; box-shadow:0 4px 18px rgba(232,131,74,0.32); }
-.btn-primary:hover { background:var(--amber-dark); transform:translateY(-1px); }
-.btn-ghost { background:none; border:1.5px solid var(--apricot); color:var(--amber); padding:11px 22px; font-size:0.88rem; }
-.btn-ghost:hover { background:var(--peach); }
-.btn-sage { background:var(--sage); color:white; padding:11px 22px; font-size:0.88rem; }
-.btn-sky { background:var(--sky); color:#1a5a70; padding:11px 22px; font-size:0.88rem; }
-.btn-sm { padding:8px 16px; font-size:0.8rem; }
-.hero { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:36px 24px 48px; text-align:center; background:linear-gradient(155deg,var(--cream) 0%,var(--peach) 55%,var(--sage-light) 100%); }
-.hero-badge { display:inline-flex; align-items:center; gap:6px; background:white; border:1.5px solid var(--apricot); color:var(--amber); border-radius:99px; font-size:0.7rem; font-weight:500; letter-spacing:0.08em; padding:5px 14px; margin-bottom:24px; text-transform:uppercase; }
-.hero h1 { font-family:'Lora',serif; font-size:clamp(2.2rem,8vw,3.8rem); font-weight:600; line-height:1.15; margin-bottom:18px; }
-.hero h1 em { color:var(--amber); font-style:italic; }
-.hero p { max-width:420px; font-size:1rem; color:var(--text-soft); line-height:1.8; margin-bottom:32px; }
-.section { padding:40px 20px; }
-.section-title { font-family:'Lora',serif; font-size:1.6rem; font-weight:600; text-align:center; margin-bottom:6px; }
-.section-sub { text-align:center; color:var(--text-muted); margin-bottom:32px; font-size:0.9rem; }
-.steps { display:flex; flex-direction:column; gap:14px; max-width:500px; margin:0 auto; }
-.step { display:flex; gap:16px; align-items:flex-start; background:white; border-radius:16px; padding:18px 20px; box-shadow:var(--shadow); }
-.step-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
-.bg-peach { background:var(--peach); } .bg-sky { background:var(--sky-light); } .bg-sage { background:var(--sage-light); } .bg-lav { background:var(--lav-light); }
-.step h3 { font-size:0.95rem; font-weight:500; margin-bottom:3px; }
-.step p { font-size:0.83rem; color:var(--text-soft); line-height:1.55; }
-.cats { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:20px; }
-.cat-btn { padding:7px 16px; border-radius:99px; border:1.5px solid transparent; font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; }
-.cat-btn[data-cat="Vergangenheit"] { background:var(--peach); color:#a05a30; border-color:#f4b07a; }
-.cat-btn[data-cat="Vergangenheit"].active { background:var(--amber); color:white; border-color:var(--amber); }
-.cat-btn[data-cat="Traeume"] { background:var(--sky-light); color:#2a6880; border-color:var(--sky); }
-.cat-btn[data-cat="Traeume"].active { background:#5aaecc; color:white; border-color:#5aaecc; }
-.cat-btn[data-cat="Werte"] { background:var(--sage-light); color:#2e6645; border-color:var(--sage); }
-.cat-btn[data-cat="Werte"].active { background:var(--sage); color:white; border-color:var(--sage); }
-.cat-btn[data-cat="Gegenwart"] { background:var(--lav-light); color:#5a3d8a; border-color:var(--lavender); }
-.cat-btn[data-cat="Gegenwart"].active { background:#9b78d4; color:white; border-color:#9b78d4; }
-.cat-btn[data-cat="Familie"] { background:var(--rose-light); color:#8a3a3a; border-color:var(--rose); }
-.cat-btn[data-cat="Familie"].active { background:#d47878; color:white; border-color:#d47878; }
-.cat-btn[data-cat="Spass"] { background:#fff8d0; color:#7a6a10; border-color:#e8d870; }
-.cat-btn[data-cat="Spass"].active { background:#c8b820; color:white; border-color:#c8b820; }
-.q-card { background:white; border-radius:var(--radius); padding:28px 24px; box-shadow:var(--shadow-lg); border:1px solid rgba(244,169,106,0.12); margin-bottom:16px; text-align:center; animation:fadeUp 0.3s ease; }
-.q-label { display:inline-block; font-size:0.68rem; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:99px; margin-bottom:16px; }
-.q-label.Vergangenheit { background:var(--peach); color:#a05a30; }
-.q-label.Traeume { background:var(--sky-light); color:#2a6880; }
-.q-label.Werte { background:var(--sage-light); color:#2e6645; }
-.q-label.Gegenwart { background:var(--lav-light); color:#5a3d8a; }
-.q-label.Familie { background:var(--rose-light); color:#8a3a3a; }
-.q-label.Spass { background:#fff8d0; color:#7a6a10; }
-.q-text { font-family:'Lora',serif; font-size:clamp(1.1rem,4vw,1.4rem); font-weight:600; line-height:1.45; margin-bottom:10px; }
-.q-hint { font-size:0.78rem; color:var(--text-muted); font-style:italic; margin-bottom:4px; }
-.q-counter { font-size:0.7rem; color:var(--text-muted); }
-.q-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:16px; }
-.share-panel { background:white; border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); margin-bottom:16px; border:1.5px solid var(--sage-light); }
-.share-panel h3 { font-size:0.95rem; font-weight:500; margin-bottom:14px; }
-.share-row { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
-.share-input { flex:1; background:var(--cream); border:1.5px solid var(--peach); border-radius:10px; padding:9px 12px; font-size:0.78rem; color:var(--text-soft); font-family:'DM Sans',sans-serif; outline:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.share-btns { display:flex; gap:8px; flex-wrap:wrap; }
-.note-panel { background:white; border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); border:1.5px solid var(--peach); }
-.note-panel h3 { font-size:0.95rem; font-weight:500; margin-bottom:16px; }
-.note-block { margin-bottom:18px; }
-.note-label { display:flex; align-items:center; gap:6px; font-size:0.78rem; font-weight:500; color:var(--text-soft); margin-bottom:6px; letter-spacing:0.04em; text-transform:uppercase; }
-.dot { width:8px; height:8px; border-radius:99px; }
-.dot-private { background:var(--lavender); } .dot-shared { background:var(--sage); }
-.note-ta { width:100%; background:var(--cream); border:1.5px solid var(--peach); border-radius:12px; padding:12px 14px; font-family:'DM Sans',sans-serif; font-size:0.9rem; color:var(--text); resize:none; outline:none; line-height:1.6; min-height:80px; }
-.note-ta:focus { border-color:var(--apricot); }
-.note-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:4px; }
-.divider { height:1px; background:var(--peach); margin:18px 0; }
-.received-card { background:white; border-radius:var(--radius); padding:32px 24px; box-shadow:var(--shadow-lg); text-align:center; max-width:480px; margin:0 auto 20px; border-top:4px solid var(--amber); }
-.received-from { font-size:0.78rem; color:var(--text-muted); margin-bottom:12px; }
-.received-q { font-family:'Lora',serif; font-size:clamp(1.15rem,4vw,1.45rem); font-weight:600; line-height:1.45; margin-bottom:8px; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* NAV */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; height: var(--nav-h);
+  background: rgba(255,248,240,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(244,169,106,0.15);
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-family: 'Lora', serif; font-size: 1.2rem; color: var(--amber); display: flex; align-items: center; gap: 7px; }
+.nav-right { font-size: 0.65rem; color: var(--text-muted); text-align: right; line-height: 1.5; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(244,169,106,0.2);
+  display: flex;
+  height: calc(var(--bnav-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.bn {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; padding: 8px 4px; cursor: pointer; border: none; background: none;
+  font-family: 'DM Sans', sans-serif; font-size: 0.62rem; color: var(--text-muted);
+  transition: color 0.15s; -webkit-tap-highlight-color: transparent;
+}
+.bn .bni { font-size: 1.3rem; }
+.bn.active { color: var(--amber); }
+
+/* SCROLL WRAPPER – main content area with padding for fixed bars */
+.scroll-wrap {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 24px 20px calc(var(--bnav-h) + env(safe-area-inset-bottom) + 16px);
+  overscroll-behavior-y: contain;
+}
+
+/* HOME page scrolls naturally */
+.home-body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--bnav-h) + env(safe-area-inset-bottom) + 16px);
+}
+
+/* BUTTONS */
+.btn { border: none; border-radius: 99px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px; -webkit-tap-highlight-color: transparent; }
+.btn-primary { background: var(--amber); color: white; padding: 14px 32px; font-size: 0.95rem; box-shadow: 0 4px 18px rgba(232,131,74,0.32); }
+.btn-primary:active { background: var(--amber-dark); transform: scale(0.97); }
+.btn-ghost { background: none; border: 1.5px solid var(--apricot); color: var(--amber); padding: 11px 22px; font-size: 0.88rem; }
+.btn-ghost:active { background: var(--peach); }
+.btn-sage { background: var(--sage); color: white; padding: 11px 22px; font-size: 0.88rem; }
+.btn-sky { background: var(--sky); color: #1a5a70; padding: 11px 22px; font-size: 0.88rem; }
+.btn-sm { padding: 8px 16px; font-size: 0.8rem; }
+
+/* HERO */
+.hero {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: clamp(32px, 8vw, 60px) 24px clamp(40px, 10vw, 72px);
+  text-align: center;
+  background: linear-gradient(155deg, var(--cream) 0%, var(--peach) 55%, var(--sage-light) 100%);
+}
+.hero-badge { display: inline-flex; align-items: center; gap: 6px; background: white; border: 1.5px solid var(--apricot); color: var(--amber); border-radius: 99px; font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em; padding: 5px 14px; margin-bottom: 22px; text-transform: uppercase; }
+.hero h1 { font-family: 'Lora', serif; font-size: clamp(2rem, 8vw, 3.8rem); font-weight: 600; line-height: 1.15; margin-bottom: 16px; }
+.hero h1 em { color: var(--amber); font-style: italic; }
+.hero p { max-width: 420px; font-size: clamp(0.92rem, 2.5vw, 1rem); color: var(--text-soft); line-height: 1.8; margin-bottom: 28px; }
+
+/* SECTIONS */
+.section { padding: clamp(32px, 6vw, 56px) 20px; }
+.section-title { font-family: 'Lora', serif; font-size: clamp(1.4rem, 4vw, 1.7rem); font-weight: 600; text-align: center; margin-bottom: 6px; }
+.section-sub { text-align: center; color: var(--text-muted); margin-bottom: 28px; font-size: 0.9rem; }
+.steps { display: flex; flex-direction: column; gap: 14px; max-width: 520px; margin: 0 auto; }
+.step { display: flex; gap: 14px; align-items: flex-start; background: white; border-radius: 16px; padding: 16px 18px; box-shadow: var(--shadow); }
+.step-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+.bg-peach { background: var(--peach); } .bg-sky { background: var(--sky-light); } .bg-sage { background: var(--sage-light); } .bg-lav { background: var(--lav-light); }
+.step h3 { font-size: 0.92rem; font-weight: 500; margin-bottom: 3px; }
+.step p { font-size: 0.82rem; color: var(--text-soft); line-height: 1.55; }
+
+/* CATEGORY TABS */
+.cats { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+.cat-btn { padding: 7px 14px; border-radius: 99px; border: 1.5px solid transparent; font-size: 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
+.cat-btn[data-cat="Vergangenheit"] { background: var(--peach); color: #a05a30; border-color: #f4b07a; }
+.cat-btn[data-cat="Vergangenheit"].active { background: var(--amber); color: white; border-color: var(--amber); }
+.cat-btn[data-cat="Traeume"] { background: var(--sky-light); color: #2a6880; border-color: var(--sky); }
+.cat-btn[data-cat="Traeume"].active { background: #5aaecc; color: white; border-color: #5aaecc; }
+.cat-btn[data-cat="Werte"] { background: var(--sage-light); color: #2e6645; border-color: var(--sage); }
+.cat-btn[data-cat="Werte"].active { background: var(--sage); color: white; border-color: var(--sage); }
+.cat-btn[data-cat="Gegenwart"] { background: var(--lav-light); color: #5a3d8a; border-color: var(--lavender); }
+.cat-btn[data-cat="Gegenwart"].active { background: #9b78d4; color: white; border-color: #9b78d4; }
+.cat-btn[data-cat="Familie"] { background: var(--rose-light); color: #8a3a3a; border-color: var(--rose); }
+.cat-btn[data-cat="Familie"].active { background: #d47878; color: white; border-color: #d47878; }
+.cat-btn[data-cat="Spass"] { background: #fff8d0; color: #7a6a10; border-color: #e8d870; }
+.cat-btn[data-cat="Spass"].active { background: #c8b820; color: white; border-color: #c8b820; }
+
+/* QUESTION CARD */
+.q-card { background: white; border-radius: var(--radius); padding: clamp(20px, 5vw, 32px) clamp(18px, 4vw, 28px); box-shadow: var(--shadow-lg); border: 1px solid rgba(244,169,106,0.12); margin-bottom: 16px; text-align: center; animation: fadeUp 0.3s ease; }
+.q-label { display: inline-block; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; margin-bottom: 14px; }
+.q-label.Vergangenheit { background: var(--peach); color: #a05a30; }
+.q-label.Traeume { background: var(--sky-light); color: #2a6880; }
+.q-label.Werte { background: var(--sage-light); color: #2e6645; }
+.q-label.Gegenwart { background: var(--lav-light); color: #5a3d8a; }
+.q-label.Familie { background: var(--rose-light); color: #8a3a3a; }
+.q-label.Spass { background: #fff8d0; color: #7a6a10; }
+.q-text { font-family: 'Lora', serif; font-size: clamp(1.05rem, 3.5vw, 1.4rem); font-weight: 600; line-height: 1.45; margin-bottom: 10px; }
+.q-hint { font-size: 0.78rem; color: var(--text-muted); font-style: italic; margin-bottom: 4px; }
+.q-counter { font-size: 0.68rem; color: var(--text-muted); }
+.q-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 16px; }
+
+/* PANELS */
+.share-panel, .note-panel { background: white; border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 16px; }
+.share-panel { border: 1.5px solid var(--sage-light); }
+.note-panel { border: 1.5px solid var(--peach); }
+.share-panel h3, .note-panel h3 { font-size: 0.92rem; font-weight: 500; margin-bottom: 14px; }
+.share-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+.share-input { flex: 1; background: var(--cream); border: 1.5px solid var(--peach); border-radius: 10px; padding: 8px 12px; font-size: 0.76rem; color: var(--text-soft); font-family: 'DM Sans', sans-serif; outline: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.note-block { margin-bottom: 16px; }
+.note-label { display: flex; align-items: center; gap: 6px; font-size: 0.76rem; font-weight: 500; color: var(--text-soft); margin-bottom: 6px; letter-spacing: 0.04em; text-transform: uppercase; }
+.dot { width: 8px; height: 8px; border-radius: 99px; }
+.dot-private { background: var(--lavender); } .dot-shared { background: var(--sage); }
+.note-ta { width: 100%; background: var(--cream); border: 1.5px solid var(--peach); border-radius: 12px; padding: 11px 13px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text); resize: vertical; outline: none; line-height: 1.6; min-height: 76px; -webkit-appearance: none; }
+.note-ta:focus { border-color: var(--apricot); }
+.note-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.divider { height: 1px; background: var(--peach); margin: 16px 0; }
+
+/* RECEIVED */
+.received-card { background: white; border-radius: var(--radius); padding: clamp(24px,6vw,36px) clamp(18px,5vw,28px); box-shadow: var(--shadow-lg); text-align: center; max-width: 500px; margin: 0 auto 20px; border-top: 4px solid var(--amber); }
+.received-from { font-size: 0.76rem; color: var(--text-muted); margin-bottom: 10px; }
+.received-q { font-family: 'Lora', serif; font-size: clamp(1.1rem, 3.5vw, 1.45rem); font-weight: 600; line-height: 1.45; }
 
 /* CHAT */
-.chat-wrap { display:flex; flex-direction:column; height:calc(100vh - 130px); }
-.chat-messages { flex:1; overflow-y:auto; padding:16px 16px 8px; display:flex; flex-direction:column; gap:10px; }
-.chat-bubble { max-width:78%; padding:12px 16px; border-radius:18px; font-size:0.9rem; line-height:1.5; word-break:break-word; }
-.bubble-me { background:var(--amber); color:white; border-bottom-right-radius:4px; align-self:flex-end; }
-.bubble-them { background:white; color:var(--text); border-bottom-left-radius:4px; align-self:flex-start; box-shadow:var(--shadow); }
-.bubble-meta { font-size:0.65rem; opacity:0.65; margin-top:4px; }
-.chat-q-ref { background:rgba(255,255,255,0.25); border-left:2px solid rgba(255,255,255,0.6); padding:4px 8px; border-radius:6px; font-size:0.75rem; margin-bottom:6px; font-style:italic; }
-.chat-q-ref.them { background:var(--peach); border-left:2px solid var(--apricot); color:var(--text-soft); }
-.chat-input-bar { display:flex; gap:8px; padding:12px 16px; background:white; border-top:1px solid var(--peach); align-items:flex-end; }
-.chat-input { flex:1; background:var(--cream); border:1.5px solid var(--peach); border-radius:20px; padding:10px 16px; font-family:'DM Sans',sans-serif; font-size:0.9rem; color:var(--text); outline:none; resize:none; max-height:120px; min-height:42px; line-height:1.4; }
-.chat-input:focus { border-color:var(--apricot); }
-.chat-send { width:42px; height:42px; border-radius:99px; background:var(--amber); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; transition:background 0.15s; }
-.chat-send:hover { background:var(--amber-dark); }
-.chat-room-info { background:var(--peach); padding:8px 16px; text-align:center; font-size:0.75rem; color:var(--text-soft); }
-.chat-room-id { font-weight:500; color:var(--amber); cursor:pointer; }
-.chat-setup { padding:24px 20px 100px; text-align:center; }
-.chat-setup h2 { font-family:'Lora',serif; font-size:1.5rem; margin-bottom:8px; }
-.chat-setup p { color:var(--text-soft); font-size:0.9rem; margin-bottom:24px; line-height:1.7; }
-.room-input { width:100%; max-width:320px; background:white; border:1.5px solid var(--peach); border-radius:12px; padding:12px 16px; font-family:'DM Sans',sans-serif; font-size:1rem; color:var(--text); outline:none; text-align:center; letter-spacing:0.08em; margin-bottom:12px; display:block; margin-left:auto; margin-right:auto; }
-.room-input:focus { border-color:var(--apricot); }
-.chat-options { display:flex; flex-direction:column; gap:10px; align-items:center; max-width:320px; margin:0 auto; }
+.chat-outer { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.chat-messages {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 16px 16px 12px; display: flex; flex-direction: column; gap: 10px;
+  overscroll-behavior-y: contain;
+}
+.chat-bubble { max-width: 80%; padding: 11px 15px; border-radius: 18px; font-size: 0.9rem; line-height: 1.5; word-break: break-word; }
+.bubble-me { background: var(--amber); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+.bubble-them { background: white; color: var(--text); border-bottom-left-radius: 4px; align-self: flex-start; box-shadow: var(--shadow); }
+.bubble-meta { font-size: 0.62rem; opacity: 0.65; margin-top: 4px; }
+.chat-q-ref { background: rgba(255,255,255,0.25); border-left: 2px solid rgba(255,255,255,0.6); padding: 3px 8px; border-radius: 5px; font-size: 0.73rem; margin-bottom: 5px; font-style: italic; }
+.chat-q-ref.them { background: var(--peach); border-left: 2px solid var(--apricot); color: var(--text-soft); }
+.chat-input-bar {
+  display: flex; gap: 8px; padding: 10px 14px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  background: white; border-top: 1px solid var(--peach); align-items: flex-end;
+  flex-shrink: 0;
+}
+.chat-input { flex: 1; background: var(--cream); border: 1.5px solid var(--peach); border-radius: 20px; padding: 9px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; color: var(--text); outline: none; resize: none; max-height: 110px; min-height: 40px; line-height: 1.4; -webkit-appearance: none; }
+.chat-input:focus { border-color: var(--apricot); }
+.chat-send { width: 40px; height: 40px; border-radius: 99px; background: var(--amber); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; -webkit-tap-highlight-color: transparent; }
+.chat-room-info { background: var(--peach); padding: 7px 16px; text-align: center; font-size: 0.73rem; color: var(--text-soft); flex-shrink: 0; }
+.chat-room-id { font-weight: 600; color: var(--amber); cursor: pointer; letter-spacing: 0.05em; }
+.chat-setup { padding: 32px 20px; text-align: center; overflow-y: auto; }
+.chat-setup h2 { font-family: 'Lora', serif; font-size: 1.5rem; margin-bottom: 8px; }
+.chat-setup p { color: var(--text-soft); font-size: 0.9rem; margin-bottom: 22px; line-height: 1.7; max-width: 340px; margin-left: auto; margin-right: auto; }
+.room-input { width: 100%; max-width: 300px; background: white; border: 1.5px solid var(--peach); border-radius: 12px; padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 1.1rem; color: var(--text); outline: none; text-align: center; letter-spacing: 0.12em; margin-bottom: 14px; display: block; margin-left: auto; margin-right: auto; -webkit-appearance: none; }
+.room-input:focus { border-color: var(--apricot); }
+.chat-options { display: flex; flex-direction: column; gap: 10px; align-items: center; max-width: 300px; margin: 0 auto; }
 
 /* ARCHIVE */
-.arc-card { background:white; border-radius:16px; padding:18px 20px; box-shadow:var(--shadow); border-left:4px solid var(--apricot); margin-bottom:14px; }
-.arc-meta { font-size:0.68rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
-.arc-q { font-family:'Lora',serif; font-size:0.95rem; margin-bottom:10px; }
-.arc-note { font-size:0.85rem; color:var(--text-soft); padding:10px 12px; border-radius:10px; margin-bottom:6px; }
-.arc-note.private { background:var(--lav-light); border-left:3px solid var(--lavender); }
-.arc-note.shared { background:var(--sage-light); border-left:3px solid var(--sage); }
-.arc-note-label { font-size:0.68rem; font-weight:500; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:3px; }
-.empty { text-align:center; padding:60px 24px; color:var(--text-muted); }
-.empty .big { font-size:3rem; margin-bottom:12px; }
-.toast { position:fixed; bottom:88px; left:50%; transform:translateX(-50%); background:var(--sage); color:white; padding:11px 22px; border-radius:99px; font-size:0.85rem; box-shadow:var(--shadow-lg); z-index:999; opacity:0; pointer-events:none; transition:opacity 0.3s; white-space:nowrap; }
-.toast.show { opacity:1; }
-footer { text-align:center; padding:24px; font-size:0.7rem; color:var(--text-muted); border-top:1px solid rgba(244,169,106,0.15); line-height:1.8; }
+.arc-card { background: white; border-radius: 16px; padding: 16px 18px; box-shadow: var(--shadow); border-left: 4px solid var(--apricot); margin-bottom: 14px; }
+.arc-meta { font-size: 0.67rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
+.arc-q { font-family: 'Lora', serif; font-size: 0.93rem; margin-bottom: 9px; }
+.arc-note { font-size: 0.84rem; color: var(--text-soft); padding: 9px 11px; border-radius: 9px; margin-bottom: 6px; }
+.arc-note.private { background: var(--lav-light); border-left: 3px solid var(--lavender); }
+.arc-note.shared { background: var(--sage-light); border-left: 3px solid var(--sage); }
+.arc-note-label { font-size: 0.66rem; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 3px; }
+.empty { text-align: center; padding: 50px 24px; color: var(--text-muted); }
+.empty .big { font-size: 2.8rem; margin-bottom: 12px; }
+
+/* TOAST */
+.toast { position: fixed; bottom: calc(var(--bnav-h) + env(safe-area-inset-bottom) + 12px); left: 50%; transform: translateX(-50%); background: var(--sage); color: white; padding: 10px 20px; border-radius: 99px; font-size: 0.85rem; box-shadow: var(--shadow-lg); z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.3s; white-space: nowrap; }
+.toast.show { opacity: 1; }
+
+footer { text-align: center; padding: 24px 20px; font-size: 0.7rem; color: var(--text-muted); border-top: 1px solid rgba(244,169,106,0.15); line-height: 1.8; }
+
+/* RESPONSIVE */
+@media (min-width: 480px) {
+  .q-actions { gap: 10px; }
+  .chat-bubble { max-width: 72%; }
+}
+@media (min-width: 768px) {
+  .scroll-wrap { padding: 32px clamp(20px, 5vw, 60px) calc(var(--bnav-h) + 24px); }
+  .steps { max-width: 600px; }
+  .q-card { max-width: 560px; margin-left: auto; margin-right: auto; }
+  .share-panel, .note-panel { max-width: 560px; margin-left: auto; margin-right: auto; }
+}
 </style>
 </head>
 <body>
@@ -157,24 +264,25 @@ footer { text-align:center; padding:24px; font-size:0.7rem; color:var(--text-mut
 <!-- HOME -->
 <div class="page active" id="pg-home">
   <nav><div class="logo">🌱 Roots</div><div class="nav-right">v1.0 · Mai 2026<br/>René Prause</div></nav>
-  <div class="hero">
-    <div class="hero-badge">✨ Echte Verbindung</div>
-    <h1>Gespräche, die<br/><em>wirklich zählen</em></h1>
-    <p>Jeden Tag eine Frage für jemanden, dem du nahestehst. Teile sie, chatte darüber – und archiviert eure Antworten gemeinsam.</p>
-    <button class="btn btn-primary" onclick="nav('pg-fragen')">Frage des Tages ↗</button>
-  </div>
-  <div class="section" style="background:white;">
-    <div class="section-title">Wie es funktioniert</div>
-    <div class="section-sub">Teilen. Antworten. Archivieren.</div>
-    <div class="steps">
-      <div class="step"><div class="step-icon bg-peach">🎯</div><div><h3>Frage wählen</h3><p>Über 80 Fragen in 6 Kategorien – von leicht bis tiefgründig.</p></div></div>
-      <div class="step"><div class="step-icon bg-sky">💌</div><div><h3>Per Link teilen</h3><p>Ein Tap – die Frage landet per WhatsApp, SMS oder Link bei der anderen Person.</p></div></div>
-      <div class="step"><div class="step-icon bg-lav">📔</div><div><h3>Doppelte Notiz</h3><p>Privat für dich – und eine Antwort zum Zurückschicken. Beides wird archiviert.</p></div></div>
-      <div class="step"><div class="step-icon bg-sage">💬</div><div><h3>Im Chat antworten</h3><p>Oder chattet direkt in der App – über die Frage und was sie auslöst.</p></div></div>
+  <div class="home-body">
+    <div class="hero">
+      <div class="hero-badge">✨ Echte Verbindung</div>
+      <h1>Gespräche, die<br/><em>wirklich zählen</em></h1>
+      <p>Jeden Tag eine Frage für jemanden, dem du nahestehst. Teile sie, chatte darüber – und archiviert eure Antworten gemeinsam.</p>
+      <button class="btn btn-primary" onclick="nav('pg-fragen')">Frage des Tages ↗</button>
     </div>
+    <div class="section" style="background:white;">
+      <div class="section-title">Wie es funktioniert</div>
+      <div class="section-sub">Teilen. Antworten. Archivieren.</div>
+      <div class="steps">
+        <div class="step"><div class="step-icon bg-peach">🎯</div><div><h3>Frage wählen</h3><p>Ueber 80 Fragen in 6 Kategorien – von leicht bis tiefgruendig.</p></div></div>
+        <div class="step"><div class="step-icon bg-sky">💌</div><div><h3>Per Link teilen</h3><p>Ein Tap – die Frage landet per WhatsApp, SMS oder Link bei der anderen Person.</p></div></div>
+        <div class="step"><div class="step-icon bg-lav">📔</div><div><h3>Doppelte Notiz</h3><p>Privat fuer dich – und eine Antwort zum Zurueckschicken. Beides wird archiviert.</p></div></div>
+        <div class="step"><div class="step-icon bg-sage">💬</div><div><h3>Im Chat antworten</h3><p>Oder chattet direkt in der App – in Echtzeit ueber Firebase.</p></div></div>
+      </div>
+    </div>
+    <footer>Roots · Version 1.0 · Mai 2026<br/>Entwickelt von <strong>René Prause</strong></footer>
   </div>
-  <footer>Roots · Version 1.0 · Mai 2026<br/>Entwickelt von <strong>René Prause</strong></footer>
-  <div style="height:70px"></div>
   <div class="bottom-nav">
     <button class="bn active" onclick="nav('pg-home')"><span class="bni">🏠</span>Start</button>
     <button class="bn" onclick="nav('pg-fragen')"><span class="bni">💬</span>Fragen</button>
@@ -197,9 +305,9 @@ footer { text-align:center; padding:24px; font-size:0.7rem; color:var(--text-mut
       <div class="q-counter" id="q-counter-el"></div>
     </div>
     <div class="q-actions">
-      <button class="btn btn-ghost" onclick="nextQ()">↻ Andere Frage</button>
-      <button class="btn btn-ghost" onclick="toggleShare()">📤 Teilen</button>
-      <button class="btn btn-primary" onclick="toggleNote()">✍️ Notiz</button>
+      <button class="btn btn-ghost btn-sm" onclick="nextQ()">↻ Andere Frage</button>
+      <button class="btn btn-ghost btn-sm" onclick="toggleShare()">📤 Teilen</button>
+      <button class="btn btn-primary btn-sm" onclick="toggleNote()">✍️ Notiz</button>
     </div>
     <div class="share-panel" id="share-panel" style="display:none">
       <h3>💌 Frage teilen</h3>
@@ -216,8 +324,8 @@ footer { text-align:center; padding:24px; font-size:0.7rem; color:var(--text-mut
     <div class="note-panel" id="note-panel" style="display:none">
       <h3>✍️ Notiz zum Gespräch</h3>
       <div class="note-block">
-        <div class="note-label"><span class="dot dot-private"></span>Nur für mich (privat)</div>
-        <textarea class="note-ta" id="note-private" rows="3" placeholder="Was hat mich bewegt, was habe ich gefühlt..."></textarea>
+        <div class="note-label"><span class="dot dot-private"></span>Nur für mich</div>
+        <textarea class="note-ta" id="note-private" rows="3" placeholder="Was hat mich bewegt..."></textarea>
       </div>
       <div class="divider"></div>
       <div class="note-block">
@@ -242,16 +350,16 @@ footer { text-align:center; padding:24px; font-size:0.7rem; color:var(--text-mut
 <div class="page" id="pg-empfangen">
   <nav><div class="logo">🌱 Roots</div><div class="nav-right">v1.0 · Mai 2026<br/>René Prause</div></nav>
   <div class="scroll-wrap">
-    <div class="section-sub" style="margin-bottom:20px">Du hast eine Frage erhalten 💌</div>
+    <div class="section-sub" style="margin-bottom:18px">Du hast eine Frage erhalten 💌</div>
     <div class="received-card">
       <div class="received-from" id="recv-from"></div>
       <div class="q-label" id="recv-label"></div>
       <div class="received-q" id="recv-text"></div>
     </div>
-    <div class="note-panel" style="max-width:480px;margin:0 auto">
+    <div class="note-panel" style="max-width:500px;margin:0 auto">
       <h3>✍️ Deine Antwort</h3>
       <div class="note-block">
-        <div class="note-label"><span class="dot dot-private"></span>Nur für mich (privat)</div>
+        <div class="note-label"><span class="dot dot-private"></span>Nur für mich</div>
         <textarea class="note-ta" id="recv-private" rows="3" placeholder="Was geht mir durch den Kopf..."></textarea>
       </div>
       <div class="divider"></div>
@@ -276,24 +384,26 @@ footer { text-align:center; padding:24px; font-size:0.7rem; color:var(--text-mut
 <!-- CHAT -->
 <div class="page" id="pg-chat">
   <nav><div class="logo">🌱 Roots</div><div class="nav-right">v1.0 · Mai 2026<br/>René Prause</div></nav>
-  <div id="chat-setup-view" class="chat-setup">
-    <div style="font-size:3rem;margin-bottom:16px">💭</div>
-    <h2>Chat starten</h2>
-    <p>Erstelle einen Chatraum und teile den Code – dann könnt ihr direkt über eure Fragen schreiben.</p>
-    <input class="room-input" id="room-code-input" placeholder="Raum-Code eingeben..." maxlength="6" oninput="this.value=this.value.toUpperCase()" />
-    <div class="chat-options">
-      <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="joinRoom()">Raum beitreten / erstellen</button>
-      <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="createRandomRoom()">✨ Neuen Raum erstellen</button>
+  <div class="chat-outer" id="chat-setup-view">
+    <div class="chat-setup">
+      <div style="font-size:3rem;margin-bottom:14px">💭</div>
+      <h2>Chat starten</h2>
+      <p>Erstelle einen Raum und teile den Code – dann könnt ihr in Echtzeit über eure Fragen schreiben.</p>
+      <input class="room-input" id="room-code-input" placeholder="RAUMCODE" maxlength="8" oninput="this.value=this.value.toUpperCase()" />
+      <div class="chat-options">
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="joinRoom()">Raum beitreten / erstellen</button>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="createRandomRoom()">✨ Neuen Raum erstellen</button>
+      </div>
+      <p style="margin-top:18px;font-size:0.76rem;color:var(--text-muted)">Beide Personen brauchen denselben Code.<br/>Der Chat läuft live via Firebase.</p>
     </div>
-    <p style="margin-top:20px;font-size:0.78rem;color:var(--text-muted)">Der Chat läuft lokal in diesem Browser.<br/>Beide Personen brauchen den gleichen Code.</p>
   </div>
-  <div id="chat-room-view" style="display:none;flex-direction:column;height:calc(100vh - 130px)">
+  <div class="chat-outer" id="chat-room-view" style="display:none">
     <div class="chat-room-info">
-      Raum: <span class="chat-room-id" id="room-id-display" onclick="copyRoomCode()"></span> · Tippe auf den Code zum Kopieren
+      Raum: <span class="chat-room-id" id="room-id-display" onclick="copyRoomCode()"></span> · Tippe zum Kopieren
     </div>
     <div class="chat-messages" id="chat-messages"></div>
     <div class="chat-input-bar">
-      <textarea class="chat-input" id="chat-input" placeholder="Nachricht schreiben..." rows="1" onkeydown="chatKeydown(event)" oninput="autoResize(this)"></textarea>
+      <textarea class="chat-input" id="chat-input" placeholder="Nachricht..." rows="1" onkeydown="chatKeydown(event)" oninput="autoResize(this)"></textarea>
       <button class="chat-send" onclick="sendMsg()">➤</button>
     </div>
   </div>
@@ -321,14 +431,12 @@ footer { text-align:center; padding:24px; font-size:0.7rem; color:var(--text-mut
   </div>
 </div>
 
-</div>
+</div><!-- #app -->
 
-<!-- Firebase SDKs (compat version for easy usage) -->
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-// ---- 80+ QUESTIONS ----
-const QUESTIONS = {
 const QUESTIONS = {
   Vergangenheit: [
     { text: "Was war der mutigste Moment in deinem Leben?", hint: "Gut fuer Eltern oder aeltere Freunde." },
@@ -430,14 +538,13 @@ let currentCat = "Vergangenheit";
 let currentQIdx = 0;
 let saved = JSON.parse(localStorage.getItem("roots_v2") || "[]");
 
-// ---- FIREBASE + CHAT STATE ----
+// FIREBASE + CHAT
 let roomCode = null;
 let chatMessages = [];
 let chatUnsub = null;
 let myDeviceId = localStorage.getItem("roots_device_id") || ("u_" + Math.random().toString(36).substring(2,9));
 localStorage.setItem("roots_device_id", myDeviceId);
 
-// Firebase globals loaded via CDN scripts (set in window._fb*)
 function initFirebase() {
   if (window._fbReady) return true;
   try {
@@ -454,21 +561,16 @@ function initFirebase() {
     window._fbReady = true;
     return true;
   } catch(e) {
-    if (e.code === "app/duplicate-app") {
-      window._fbDB = firebase.database();
-      window._fbReady = true;
-      return true;
-    }
-    console.error("Firebase init:", e);
-    return false;
+    if (e.code === "app/duplicate-app") { window._fbDB = firebase.database(); window._fbReady = true; return true; }
+    console.error("Firebase:", e); return false;
   }
 }
 
-// ---- NAV ----
+// NAV
 function nav(pageId) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.getElementById(pageId).classList.add("active");
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
   if (pageId === "pg-archiv") renderArchiv();
   if (pageId === "pg-fragen") { buildCats(); renderQ(); }
 }
@@ -479,7 +581,7 @@ function toast(msg) {
   setTimeout(() => t.classList.remove("show"), 2400);
 }
 
-// ---- CATEGORIES ----
+// CATEGORIES
 function buildCats() {
   const wrap = document.getElementById("cat-btns");
   if (wrap.children.length) return;
@@ -496,7 +598,7 @@ function updateCatsActive() {
   document.querySelectorAll(".cat-btn").forEach(b => b.classList.toggle("active", b.getAttribute("data-cat") === currentCat));
 }
 
-// ---- QUESTION ----
+// QUESTION
 function renderQ() {
   const q = QUESTIONS[currentCat][currentQIdx];
   const label = document.getElementById("q-label-el");
@@ -514,7 +616,7 @@ function renderQ() {
 }
 function nextQ() { currentQIdx = (currentQIdx+1) % QUESTIONS[currentCat].length; renderQ(); }
 
-// ---- SHARE ----
+// SHARE
 function getShareLink() {
   const base = window.location.href.split("?")[0];
   return base + "?cat=" + encodeURIComponent(currentCat) + "&qi=" + currentQIdx;
@@ -533,17 +635,15 @@ function toggleNote() {
   p.style.display = p.style.display === "none" ? "block" : "none";
 }
 function copyLink() {
-  navigator.clipboard.writeText(getShareLink()).then(() => toast("Link kopiert!")).catch(() => toast("Kopiere: " + getShareLink()));
+  navigator.clipboard.writeText(getShareLink()).then(() => toast("Link kopiert!")).catch(() => toast("Link: " + getShareLink()));
 }
 function shareWhatsApp() {
   const q = QUESTIONS[currentCat][currentQIdx];
-  const msg = "Ich habe eine Frage fuer dich:\n\n\"" + q.text + "\"\n\nDeine Antwort: " + getShareLink();
-  window.open("https://wa.me/?text=" + encodeURIComponent(msg));
+  window.open("https://wa.me/?text=" + encodeURIComponent("Ich habe eine Frage fuer dich:\n\n\"" + q.text + "\"\n\nDeine Antwort: " + getShareLink()));
 }
 function shareSMS() {
   const q = QUESTIONS[currentCat][currentQIdx];
-  const msg = "Frage fuer dich: \"" + q.text + "\" " + getShareLink();
-  window.open("sms:?body=" + encodeURIComponent(msg));
+  window.open("sms:?body=" + encodeURIComponent("Frage fuer dich: \"" + q.text + "\" " + getShareLink()));
 }
 function shareNative() {
   const q = QUESTIONS[currentCat][currentQIdx];
@@ -551,22 +651,19 @@ function shareNative() {
   else copyLink();
 }
 
-// ---- NOTES ----
+// NOTES
 function collectNote() {
   return { cat: currentCat, question: QUESTIONS[currentCat][currentQIdx].text, private: document.getElementById("note-private").value.trim(), shared: document.getElementById("note-shared").value.trim(), date: new Date().toLocaleDateString("de-DE"), ts: Date.now() };
 }
-function persistSave(e) {
-  saved.unshift(e);
-  localStorage.setItem("roots_v2", JSON.stringify(saved));
-}
+function persistSave(e) { saved.unshift(e); localStorage.setItem("roots_v2", JSON.stringify(saved)); }
 function saveOnly() {
   const e = collectNote();
-  if (!e.private && !e.shared) { toast("Bitte erst etwas eingeben."); return; }
+  if (!e.private && !e.shared) { toast("Bitte etwas eingeben."); return; }
   persistSave(e); document.getElementById("note-panel").style.display = "none"; toast("Gespeichert!");
 }
 function saveAndSend() {
   const e = collectNote();
-  if (!e.private && !e.shared) { toast("Bitte erst etwas eingeben."); return; }
+  if (!e.private && !e.shared) { toast("Bitte etwas eingeben."); return; }
   persistSave(e); document.getElementById("note-panel").style.display = "none"; toast("Gespeichert!");
   if (e.shared) {
     const msg = "Meine Antwort auf \"" + e.question + "\":\n\n" + e.shared;
@@ -574,26 +671,20 @@ function saveAndSend() {
     else window.open("https://wa.me/?text=" + encodeURIComponent(msg));
   }
 }
-
-// ---- RECEIVED ----
 function recvSaveOnly() {
-  const params = new URLSearchParams(window.location.search);
-  const cat = decodeURIComponent(params.get("cat") || "");
-  const qi = parseInt(params.get("qi") || "0");
-  const q = (QUESTIONS[cat] || [])[qi];
-  if (!q) return;
+  const p = new URLSearchParams(window.location.search);
+  const cat = decodeURIComponent(p.get("cat")||""); const qi = parseInt(p.get("qi")||"0");
+  const q = (QUESTIONS[cat]||[])[qi]; if (!q) return;
   const e = { cat, question: q.text, private: document.getElementById("recv-private").value.trim(), shared: document.getElementById("recv-shared").value.trim(), date: new Date().toLocaleDateString("de-DE"), ts: Date.now(), received: true };
-  if (!e.private && !e.shared) { toast("Bitte erst etwas eingeben."); return; }
+  if (!e.private && !e.shared) { toast("Bitte etwas eingeben."); return; }
   persistSave(e); toast("Gespeichert!");
 }
 function recvSaveAndSend() {
-  const params = new URLSearchParams(window.location.search);
-  const cat = decodeURIComponent(params.get("cat") || "");
-  const qi = parseInt(params.get("qi") || "0");
-  const q = (QUESTIONS[cat] || [])[qi];
-  if (!q) return;
+  const p = new URLSearchParams(window.location.search);
+  const cat = decodeURIComponent(p.get("cat")||""); const qi = parseInt(p.get("qi")||"0");
+  const q = (QUESTIONS[cat]||[])[qi]; if (!q) return;
   const e = { cat, question: q.text, private: document.getElementById("recv-private").value.trim(), shared: document.getElementById("recv-shared").value.trim(), date: new Date().toLocaleDateString("de-DE"), ts: Date.now(), received: true };
-  if (!e.private && !e.shared) { toast("Bitte erst etwas eingeben."); return; }
+  if (!e.private && !e.shared) { toast("Bitte etwas eingeben."); return; }
   persistSave(e); toast("Gespeichert!");
   if (e.shared) {
     const msg = "Meine Antwort auf \"" + q.text + "\":\n\n" + e.shared;
@@ -602,37 +693,30 @@ function recvSaveAndSend() {
   }
 }
 
-// ---- CHAT WITH FIREBASE ----
-function genCode() {
-  return Math.random().toString(36).substring(2,8).toUpperCase();
-}
-function createRandomRoom() {
-  const code = genCode();
-  document.getElementById("room-code-input").value = code;
-  joinRoom();
-}
+// CHAT
+function genCode() { return Math.random().toString(36).substring(2,8).toUpperCase(); }
+function createRandomRoom() { document.getElementById("room-code-input").value = genCode(); joinRoom(); }
 function joinRoom() {
   const code = document.getElementById("room-code-input").value.trim().toUpperCase();
-  if (code.length < 3) { toast("Mindestens 3 Zeichen eingeben."); return; }
+  if (code.length < 3) { toast("Mindestens 3 Zeichen."); return; }
   if (!initFirebase()) { toast("Firebase nicht verfuegbar."); return; }
   roomCode = code;
   document.getElementById("room-id-display").textContent = code;
   document.getElementById("chat-setup-view").style.display = "none";
-  document.getElementById("chat-room-view").style.display = "flex";
+  const rv = document.getElementById("chat-room-view");
+  rv.style.display = "flex"; rv.style.flexDirection = "column"; rv.style.flex = "1";
   chatMessages = [];
-  // unsubscribe previous listener
   if (chatUnsub) { chatUnsub(); chatUnsub = null; }
-  // listen for new messages
   const msgRef = window._fbDB.ref("rooms/" + roomCode + "/messages").limitToLast(100);
-  chatUnsub = msgRef.on("value", snapshot => {
+  chatUnsub = msgRef.on("value", snap => {
     chatMessages = [];
-    snapshot.forEach(child => chatMessages.push(child.val()));
+    snap.forEach(child => chatMessages.push(child.val()));
     renderChat();
   });
   toast("Raum \"" + roomCode + "\" beigetreten!");
 }
 function copyRoomCode() {
-  navigator.clipboard.writeText(roomCode).then(() => toast("Code \"" + roomCode + "\" kopiert!")).catch(() => toast("Code: " + roomCode));
+  navigator.clipboard.writeText(roomCode).then(() => toast("Code kopiert!")).catch(() => toast("Code: " + roomCode));
 }
 function renderChat() {
   const wrap = document.getElementById("chat-messages");
@@ -651,41 +735,32 @@ function sendMsg() {
   const text = input.value.trim();
   if (!text || !roomCode) return;
   const currentQ = QUESTIONS[currentCat] ? QUESTIONS[currentCat][currentQIdx] : null;
-  const msg = {
-    deviceId: myDeviceId,
-    text: text,
+  window._fbDB.ref("rooms/" + roomCode + "/messages").push({
+    deviceId: myDeviceId, text,
     time: new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }),
     ts: Date.now(),
     questionRef: currentQ ? currentQ.text : null,
-  };
-  window._fbDB.ref("rooms/" + roomCode + "/messages").push(msg)
-    .catch(e => { toast("Senden fehlgeschlagen."); console.error(e); });
-  input.value = ""; input.style.height = "42px";
+  }).catch(e => { toast("Senden fehlgeschlagen."); console.error(e); });
+  input.value = ""; input.style.height = "40px";
 }
-function chatKeydown(e) {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); }
-}
-function autoResize(el) {
-  el.style.height = "42px";
-  el.style.height = Math.min(el.scrollHeight, 120) + "px";
-}
+function chatKeydown(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMsg(); } }
+function autoResize(el) { el.style.height = "40px"; el.style.height = Math.min(el.scrollHeight, 110) + "px"; }
 
-// ---- ARCHIVE ----
+// ARCHIVE
 function renderArchiv() {
   const list = document.getElementById("arc-list");
   if (!saved.length) {
-    list.innerHTML = '<div class="empty"><div class="big">🌱</div><p>Noch keine Gespraeche gespeichert.<br/>Stell heute die erste Frage!</p></div>';
+    list.innerHTML = '<div class="empty"><div class="big">🌱</div><p>Noch keine Gespraeche gespeichert.</p></div>';
     return;
   }
   list.innerHTML = saved.map(s => {
     const priv = s.private ? '<div class="arc-note private"><div class="arc-note-label">Nur fuer mich</div>' + s.private + '</div>' : "";
     const shar = s.shared ? '<div class="arc-note shared"><div class="arc-note-label">Zurueckgeschickt</div>' + s.shared + '</div>' : "";
-    const recv = s.received ? " · Empfangen" : "";
-    return '<div class="arc-card"><div class="arc-meta">' + s.cat + ' · ' + s.date + recv + '</div><div class="arc-q">' + s.question + '</div>' + priv + shar + '</div>';
+    return '<div class="arc-card"><div class="arc-meta">' + s.cat + ' · ' + s.date + (s.received ? ' · Empfangen' : '') + '</div><div class="arc-q">' + s.question + '</div>' + priv + shar + '</div>';
   }).join("");
 }
 
-// ---- INIT ----
+// INIT
 window.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const cat = decodeURIComponent(params.get("cat") || "");
@@ -699,6 +774,11 @@ window.addEventListener("DOMContentLoaded", () => {
     nav("pg-empfangen");
   } else {
     buildCats(); renderQ();
+  }
+
+  // PWA service worker registration
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
   }
 });
 </script>
