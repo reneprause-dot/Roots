@@ -1,7 +1,7 @@
 {
   "name": "Roots – Echte Gespraeche",
   "short_name": "Roots",
-  "description": "Tiefe Gespraeche mit Menschen, die dir wichtig sind",
+  "description": "Tiefe Gespraeche mit Menschen die dir wichtig sind",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#fff8f0",
